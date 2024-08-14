@@ -1,8 +1,8 @@
 {
-  "expo": {
-    "name": "my-proj",
-    "slug": "my-proj",
-    "version": "1.0.0"
-  },
-  "name": "my-proj"
+    "expo": {
+        "name": "EZCNT",
+        "slug": "EZCNT",
+        "version": "1.0.0"
+    },
+    "name": "EZCNT"
 }

@@ -1,21 +1,35 @@
 {
-  "name": "my-proj",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "start": "expo start --dev-client",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web"
-  },
-  "dependencies": {
-    "expo": "~51.0.24",
-    "expo-status-bar": "~1.12.1",
-    "react": "18.2.0",
-    "react-native": "0.74.3"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.20.0"
-  },
-  "private": true
+    "name": "EZCNT",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "start": "expo start --dev-client",
+        "android": "expo run:android",
+        "ios": "expo run:ios",
+        "web": "expo start --web"
+    },
+    "dependencies": {
+        "@react-navigation/native": "^6.1.18",
+        "@react-navigation/native-stack": "^6.11.0",
+        "@rneui/base": "^4.0.0-rc.7",
+        "@rneui/themed": "^4.0.0-rc.8",
+        "expo": "~51.0.24",
+        "expo-sqlite": "~14.0.6",
+        "expo-status-bar": "~1.12.1",
+        "react": "18.2.0",
+        "react-native": "0.74.3",
+        "react-native-reanimated": "~3.10.1",
+        "react-native-safe-area-context": "4.10.5",
+        "react-native-screens": "3.31.1"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.20.0",
+        "@tsconfig/react-native": "^3.0.5",
+        "@types/jest": "^29.5.12",
+        "@types/react": "^18.3.3",
+        "@types/react-test-renderer": "^18.3.0",
+        "react-native-svg-transformer": "^1.5.0",
+        "typescript": "^5.5.4"
+    },
+    "private": true
 }
