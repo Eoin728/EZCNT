@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import { ScrollView, Button, Text } from "react-native";
 import WorkoutComponent from "../WorkoutComponents/workout";
 import AddSomethingPopup from "../Components/addSomethingPopup";
-import { getWorkouts, Workout, addWorkout, addDay } from "../Utility/database";
+import {
+    getWorkouts,
+    Workout,
+    addWorkout,
+    addWorkoutDay,
+} from "../Utility/database";
 
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
@@ -13,12 +18,16 @@ type NavigationStackParamList = {
 
 type Props = NativeStackScreenProps<NavigationStackParamList, "WorkoutEditor">;
 
+const firstWorkoutDayName = "1";
+
 const WorkoutEditor = ({ route, navigation }: Props) => {
     const [workoutArray, setWorkoutArray] = useState<Workout[]>([]);
     const [modalVisible, setModalVisible] = React.useState(false);
-    const addWorkoutHere = async (Name: string) => {
+
+    const addWorkoutToWorkoutEditor = async (Name: string) => {
         await addWorkout(Name).then((just_added_workout_id) => {
-            if (just_added_workout_id != null) addDay(1, just_added_workout_id);
+            if (just_added_workout_id != null)
+                addWorkoutDay(firstWorkoutDayName, just_added_workout_id);
         });
         loadWorkouts();
     };
@@ -43,8 +52,7 @@ const WorkoutEditor = ({ route, navigation }: Props) => {
                 workoutArray.map((workout) => (
                     <WorkoutComponent
                         key={workout.Id}
-                        name={workout.Name}
-                        id={workout.Id}
+                        info={workout}
                         updatePar={loadWorkouts}
                     />
                 ))
@@ -55,7 +63,7 @@ const WorkoutEditor = ({ route, navigation }: Props) => {
                 needsCounter={false}
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
-                onSave={addWorkoutHere}
+                onSave={addWorkoutToWorkoutEditor}
             />
             <Button
                 title="ADD WORKOUT"

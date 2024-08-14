@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Button, Text, View } from "react-native";
 import ExcersiseComponent from "../WorkoutComponents/excersise";
-import { addExcersise, Excersise, getExercises } from "../Utility/database";
+import {
+    addExcersise,
+    Excersise,
+    getExercises,
+    deleteRecord,
+    WorkoutDayTable,
+} from "../Utility/database";
 import AddExcersisePopup from "../Components/addExcersisePopup";
 
 export type workoutDayProp = {
     info: any;
+    updatePar: Function;
 };
 
-const WorkoutDay = ({ info }: workoutDayProp) => {
+const WorkoutDay = ({ info, updatePar }: workoutDayProp) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [excersises, setExcersises] = useState<Excersise[]>([]);
     const [loadingExcersises, setLoadingExcersises] = useState(true);
@@ -69,11 +76,23 @@ const WorkoutDay = ({ info }: workoutDayProp) => {
                     />
                 ))
             )}
-            <View style={{ width: "60%", margin: "auto" }}>
-                <Button
-                    title="add excersise"
-                    onPress={() => setModalVisible(true)}
-                ></Button>
+            <View style={{ flexDirection: "row" }}>
+                <View style={{ width: "45%", margin: "auto" }}>
+                    <Button
+                        title="add excersise"
+                        onPress={() => setModalVisible(true)}
+                    ></Button>
+                </View>
+
+                <View style={{ width: "45%", margin: "auto" }}>
+                    <Button
+                        title="delete this day"
+                        onPress={() => {
+                            deleteRecord(WorkoutDayTable, info.Id);
+                            updatePar();
+                        }}
+                    ></Button>
+                </View>
             </View>
         </View>
     );

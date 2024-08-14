@@ -8,7 +8,7 @@ export interface Workout {
 
 export interface WorkoutDay {
     Id: number;
-    Day: number;
+    Day: string;
     Workout: number;
 }
 
@@ -40,7 +40,7 @@ const workoutTableSchema = `
 const workoutDayTableSchema = `
    CREATE TABLE IF NOT EXISTS WorkoutDay (
       Id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-      Day INTEGER NOT NULL,
+      Day TEXT NOT NULL,
       Workout INTEGER NOT NULL,
       FOREIGN KEY (Workout) REFERENCES Workout(Id) ON DELETE CASCADE
    )
@@ -157,11 +157,11 @@ export const getWorkouts = async (): Promise<Workout[]> => {
     return [];
 };
 
-export const addDay = async (day_id: number, workoutId: number) => {
+export const addWorkoutDay = async (day_id: string, workoutId: number) => {
     var s =
-        "INSERT INTO WorkoutDay (Day,Workout) VALUES (" +
+        'INSERT INTO WorkoutDay (Day,Workout) VALUES ("' +
         day_id +
-        "," +
+        '",' +
         workoutId +
         ");";
     try {
