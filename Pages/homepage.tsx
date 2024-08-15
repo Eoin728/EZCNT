@@ -14,8 +14,8 @@ import {
     FavouriteWorkout,
     Excersise,
     WorkoutDay,
-    updateFavouriteWorkoutSet,
-    updateFavouriteWorkoutExcersise,
+    saveFavouriteWorkoutSet,
+    saveFavouriteWorkoutExcersise,
 } from "../Utility/database";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
@@ -27,26 +27,14 @@ type NavigationStackParamList = {
 type Props = NativeStackScreenProps<NavigationStackParamList, "HomePage">;
 
 export default function HomePage({ route, navigation }: Props) {
-    const noWorkoutMessage =
-        "no workouts set as current,press the table icon to change";
-    const noExcersisesMessage =
-        "current workout has no excersises,press the table icon to add some";
-
-    const [favWorkout, setFavWorkout] = useState(0);
     const [favWorkoutInfo, setFavWorkoutInfo] =
-        useState<FavouriteWorkout | null>();
-    const [favWorkoutName, setFavWorkoutName] = useState(noWorkoutMessage);
+        useState<FavouriteWorkout | null>(null);
     const [currentExcersise, setCurrentExercise] = useState<Excersise | null>(
         null,
     );
-    const [currentExcersiseIndex, setcurrentExcersiseIndex] = useState(0);
-    const [currentExerciseName, setCurrentExcersiseName] =
-        useState(noExcersisesMessage);
-    const [currentSet, setCurrentSet] = useState(0);
-    const [currentSetTotalNum, setCurrentSetTotalNum] = useState(0);
-    const [currentRepsNum, setCurrentRepsNum] = useState(0);
     const [ExcersisesList, setExcersisesList] = useState<Excersise[]>([]);
     const [workoutDays, setworkoutDays] = useState<WorkoutDay[]>([]);
+    const [currentSet, setCurrentSet] = useState(0);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -56,46 +44,85 @@ export default function HomePage({ route, navigation }: Props) {
     const finishWorkout = () => {
         console.log("finished");
     };
+    type Increment = 1;
+    type Decrement = -1;
 
-    const goToNextExcersise = () => {
+    const updateFavouriteWorkoutSet = (
+        currentInfo: FavouriteWorkout | null,
+        setNum: number,
+    ) => {
+        if (currentInfo == null) return;
+        var a = currentInfo;
+        a.CurrentSet = setNum;
+
+        setFavWorkoutInfo(a);
+        setCurrentSet(setNum);
+        saveFavouriteWorkoutSet(setNum);
+    };
+
+    const updateFavouriteWorkoutExcersise = (
+        currentInfo: FavouriteWorkout | null,
+        excersise: number,
+    ) => {
+        if (currentInfo == null) return;
+        var a = currentInfo;
+        a.CurrentExcersise = excersise;
+        setFavWorkoutInfo(a);
+        saveFavouriteWorkoutExcersise(excersise);
+    };
+
+    const switchExcersise = (direction: Increment | Decrement) => {
         if (favWorkoutInfo == null) return;
-        if (favWorkoutInfo.CurrentExcersise + 1 == ExcersisesList.length) {
+        if (direction < 0 && favWorkoutInfo.CurrentExcersise == 0) {
+            return;
+        } else if (
+            direction > 0 &&
+            favWorkoutInfo.CurrentExcersise + 1 == ExcersisesList.length
+        ) {
             finishWorkout();
         } else {
+            if (direction > 0) {
+                updateFavouriteWorkoutSet(favWorkoutInfo, 0);
+            } else {
+                updateFavouriteWorkoutSet(
+                    favWorkoutInfo,
+                    ExcersisesList[favWorkoutInfo.CurrentExcersise + direction]
+                        .Sets - 1,
+                );
+            }
+
             setCurrentExercise(
-                ExcersisesList[favWorkoutInfo.CurrentExcersise + 1],
-            );
-            setCurrentExcersiseName(
-                ExcersisesList[favWorkoutInfo.CurrentExcersise + 1].Name,
+                ExcersisesList[favWorkoutInfo.CurrentExcersise + direction],
             );
 
             updateFavouriteWorkoutExcersise(
-                favWorkoutInfo.CurrentExcersise + 1,
+                favWorkoutInfo,
+                favWorkoutInfo.CurrentExcersise + direction,
             );
         }
     };
 
-    const incrementSet = () => {
-        if (currentSet + 1 >= currentSetTotalNum) {
-            setCurrentSet(0);
-            updateFavouriteWorkoutSet(0);
-            goToNextExcersise();
+    const switchSet = (direction: Increment | Decrement) => {
+        if (currentExcersise == null || favWorkoutInfo == null) return;
+        if (
+            direction > 0 &&
+            favWorkoutInfo.CurrentSet + 1 >= currentExcersise.Sets
+        ) {
+            switchExcersise(1);
+        } else if (direction < 0 && favWorkoutInfo.CurrentSet == 0) {
+            switchExcersise(-1);
         } else {
-            setCurrentSet(currentSet + 1);
-            updateFavouriteWorkoutSet(currentSet + 1);
+            updateFavouriteWorkoutSet(
+                favWorkoutInfo,
+                favWorkoutInfo.CurrentSet + direction,
+            );
         }
     };
 
     const setFavouriteWorkoutInfoNull = () => {
-        setFavWorkout(0);
-        setFavWorkoutName(noWorkoutMessage);
         setworkoutDays([]);
         setExcersisesList([]);
         setCurrentExercise(null);
-        setCurrentExcersiseName(noExcersisesMessage);
-        setCurrentRepsNum(0);
-        setCurrentSetTotalNum(0);
-        // setcurrentExcersiseIndex(0);
     };
 
     const loadFavouriteWorkout = async () => {
@@ -104,8 +131,6 @@ export default function HomePage({ route, navigation }: Props) {
             setFavouriteWorkoutInfoNull();
         } else {
             setFavWorkoutInfo(fav);
-            setFavWorkout(fav.WorkoutId);
-            setFavWorkoutName(fav.WorkoutName);
             const workoutDays: WorkoutDay[] = await getWorkoutDays(
                 fav.WorkoutId,
             );
@@ -115,17 +140,6 @@ export default function HomePage({ route, navigation }: Props) {
             );
             setExcersisesList(Excersises);
             setCurrentExercise(Excersises[fav.CurrentExcersise]);
-            if (Excersises.length > 0) {
-                setCurrentExcersiseName(Excersises[fav.CurrentExcersise].Name);
-                setCurrentRepsNum(Excersises[fav.CurrentExcersise].Reps);
-                setCurrentSetTotalNum(Excersises[fav.CurrentExcersise].Sets);
-            } else {
-                setCurrentExcersiseName(noExcersisesMessage);
-                setCurrentRepsNum(0);
-                setCurrentSetTotalNum(0);
-                // setcurrentExcersiseIndex(0);
-            }
-            setCurrentSet(fav.CurrentSet);
         }
     };
 
@@ -139,22 +153,67 @@ export default function HomePage({ route, navigation }: Props) {
         loadDataBase();
     }, []);
 
+    const outputExcersiseInfo = (
+        info: Excersise | null,
+        property: "Name" | "Reps" | "Sets",
+    ) => {
+        if (info == null) return <Text></Text>;
+        var value: number | string = "";
+        switch (property) {
+            case "Name":
+                value = info.Name;
+                break;
+            case "Reps":
+                value = info.Reps;
+                break;
+            case "Sets":
+                value = info.Sets;
+                break;
+        }
+        return value;
+    };
+
+    const outputFavouriteWorkoutInfo = (
+        info: FavouriteWorkout | null,
+        property: "Name",
+    ) => {
+        if (info == null) return <Text></Text>;
+        var value: number | string = "";
+        switch (property) {
+            case "Name":
+                value = info.WorkoutName;
+                break;
+        }
+        return value;
+    };
+
     return (
         <View style={styles.container}>
-            <Text> workout: {favWorkoutName}</Text>
-            <Text> Excersise: {currentExerciseName}</Text>
+            <Text>
+                workout: {outputFavouriteWorkoutInfo(favWorkoutInfo, "Name")}
+            </Text>
             <Text>
                 {" "}
-                Set: {currentSet} / {currentSetTotalNum}{" "}
+                excersise: {outputExcersiseInfo(currentExcersise, "Name")}
             </Text>
-            <Text> Reps: {currentRepsNum} </Text>
+            <Text>
+                {" "}
+                Set: {currentSet} /{" "}
+                {outputExcersiseInfo(currentExcersise, "Sets")}{" "}
+            </Text>
+            <Text> Reps: {outputExcersiseInfo(currentExcersise, "Reps")} </Text>
             <PressableImage
                 onpress={() => {
-                    incrementSet();
+                    switchSet(1);
                 }}
                 img={weightImage}
             />
-            <PressableImage onpress={() => {}} img={undoImage} />
+            <PressableImage
+                onpress={() => {
+                    switchSet(-1);
+                }}
+                img={undoImage}
+            />
             <PressableImage
                 onpress={() => navigation.navigate("WorkoutEditor")}
                 img={tableImage}

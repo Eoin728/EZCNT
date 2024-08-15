@@ -342,7 +342,7 @@ export const setNewFavouriteWorkout = async (
     }
 };
 
-export const updateFavouriteWorkoutSet = async (newSetNum: number) => {
+export const saveFavouriteWorkoutSet = async (newSetNum: number) => {
     var s =
         "UPDATE " +
         FavouriteWorkoutTable +
@@ -363,7 +363,7 @@ export const updateFavouriteWorkoutSet = async (newSetNum: number) => {
     }
 };
 
-export const updateFavouriteWorkoutExcersise = async (
+export const saveFavouriteWorkoutExcersise = async (
     newExcersiseNum: number,
 ) => {
     var s =
