@@ -341,3 +341,47 @@ export const setNewFavouriteWorkout = async (
         );
     }
 };
+
+export const updateFavouriteWorkoutSet = async (newSetNum: number) => {
+    var s =
+        "UPDATE " +
+        FavouriteWorkoutTable +
+        " SET CurrentSet = " +
+        newSetNum +
+        " WHERE Id = " +
+        1 +
+        ";";
+    try {
+        await db.runAsync(s);
+    } catch (error) {
+        console.error(
+            "failed to update favworkout sets to new value " +
+                newSetNum +
+                " error message:",
+            error,
+        );
+    }
+};
+
+export const updateFavouriteWorkoutExcersise = async (
+    newExcersiseNum: number,
+) => {
+    var s =
+        "UPDATE " +
+        FavouriteWorkoutTable +
+        " SET CurrentExcersise = " +
+        newExcersiseNum +
+        " WHERE Id = " +
+        1 +
+        ";";
+    try {
+        await db.runAsync(s);
+    } catch (error) {
+        console.error(
+            "failed to update favworkout excersise number to new value " +
+                newExcersiseNum +
+                " error message:",
+            error,
+        );
+    }
+};

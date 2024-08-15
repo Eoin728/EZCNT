@@ -2,6 +2,7 @@ import React from "react";
 import { Alert, Modal, Pressable, Text, View, TextInput } from "react-native";
 import QuantitySelector from "./quantitySelector";
 import popupStyles from "../Styles/popupStyles";
+import { maxRepsOrSetsAllowed } from "../Utility/global_consts";
 
 export type AddExcersisePopupProp = {
     onSave: Function;
@@ -38,15 +39,15 @@ const AddExcersisePopup = ({
 
                         <QuantitySelector
                             updateCnt={setrepsNum}
-                            value={0}
-                            minQuantity={0}
-                            maxQuantity={56}
+                            value={1}
+                            minQuantity={1}
+                            maxQuantity={maxRepsOrSetsAllowed}
                         />
                         <QuantitySelector
                             updateCnt={setSetsNum}
-                            value={0}
-                            minQuantity={0}
-                            maxQuantity={56}
+                            value={1}
+                            minQuantity={1}
+                            maxQuantity={maxRepsOrSetsAllowed}
                         />
                         <Pressable
                             style={[

@@ -14,6 +14,8 @@ import {
     FavouriteWorkout,
     Excersise,
     WorkoutDay,
+    updateFavouriteWorkoutSet,
+    updateFavouriteWorkoutExcersise,
 } from "../Utility/database";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
@@ -31,10 +33,13 @@ export default function HomePage({ route, navigation }: Props) {
         "current workout has no excersises,press the table icon to add some";
 
     const [favWorkout, setFavWorkout] = useState(0);
+    const [favWorkoutInfo, setFavWorkoutInfo] =
+        useState<FavouriteWorkout | null>();
     const [favWorkoutName, setFavWorkoutName] = useState(noWorkoutMessage);
     const [currentExcersise, setCurrentExercise] = useState<Excersise | null>(
         null,
     );
+    const [currentExcersiseIndex, setcurrentExcersiseIndex] = useState(0);
     const [currentExerciseName, setCurrentExcersiseName] =
         useState(noExcersisesMessage);
     const [currentSet, setCurrentSet] = useState(0);
@@ -48,6 +53,38 @@ export default function HomePage({ route, navigation }: Props) {
             loadFavouriteWorkout();
         }, []),
     );
+    const finishWorkout = () => {
+        console.log("finished");
+    };
+
+    const goToNextExcersise = () => {
+        if (favWorkoutInfo == null) return;
+        if (favWorkoutInfo.CurrentExcersise + 1 == ExcersisesList.length) {
+            finishWorkout();
+        } else {
+            setCurrentExercise(
+                ExcersisesList[favWorkoutInfo.CurrentExcersise + 1],
+            );
+            setCurrentExcersiseName(
+                ExcersisesList[favWorkoutInfo.CurrentExcersise + 1].Name,
+            );
+
+            updateFavouriteWorkoutExcersise(
+                favWorkoutInfo.CurrentExcersise + 1,
+            );
+        }
+    };
+
+    const incrementSet = () => {
+        if (currentSet + 1 >= currentSetTotalNum) {
+            setCurrentSet(0);
+            updateFavouriteWorkoutSet(0);
+            goToNextExcersise();
+        } else {
+            setCurrentSet(currentSet + 1);
+            updateFavouriteWorkoutSet(currentSet + 1);
+        }
+    };
 
     const setFavouriteWorkoutInfoNull = () => {
         setFavWorkout(0);
@@ -58,6 +95,7 @@ export default function HomePage({ route, navigation }: Props) {
         setCurrentExcersiseName(noExcersisesMessage);
         setCurrentRepsNum(0);
         setCurrentSetTotalNum(0);
+        // setcurrentExcersiseIndex(0);
     };
 
     const loadFavouriteWorkout = async () => {
@@ -65,6 +103,7 @@ export default function HomePage({ route, navigation }: Props) {
         if (fav == null) {
             setFavouriteWorkoutInfoNull();
         } else {
+            setFavWorkoutInfo(fav);
             setFavWorkout(fav.WorkoutId);
             setFavWorkoutName(fav.WorkoutName);
             const workoutDays: WorkoutDay[] = await getWorkoutDays(
@@ -84,6 +123,7 @@ export default function HomePage({ route, navigation }: Props) {
                 setCurrentExcersiseName(noExcersisesMessage);
                 setCurrentRepsNum(0);
                 setCurrentSetTotalNum(0);
+                // setcurrentExcersiseIndex(0);
             }
             setCurrentSet(fav.CurrentSet);
         }
@@ -108,7 +148,12 @@ export default function HomePage({ route, navigation }: Props) {
                 Set: {currentSet} / {currentSetTotalNum}{" "}
             </Text>
             <Text> Reps: {currentRepsNum} </Text>
-            <PressableImage onpress={() => {}} img={weightImage} />
+            <PressableImage
+                onpress={() => {
+                    incrementSet();
+                }}
+                img={weightImage}
+            />
             <PressableImage onpress={() => {}} img={undoImage} />
             <PressableImage
                 onpress={() => navigation.navigate("WorkoutEditor")}

@@ -9,6 +9,7 @@ import {
     updateExcersisesRepCount,
     updateExcersisesSetCount,
 } from "../Utility/database";
+import { maxRepsOrSetsAllowed } from "../Utility/global_consts";
 
 export type ExcersiseProps = {
     info: Excersise;
@@ -23,8 +24,6 @@ const ExcersiseComponent = ({ info, updatePar }: ExcersiseProps) => {
     const updateSetCount = async (newSetCount: number) => {
         updateExcersisesSetCount(info.Id, newSetCount);
     };
-
-    const maxRepsOrSetsAllowed = 100;
 
     return (
         <Card>
@@ -47,7 +46,7 @@ const ExcersiseComponent = ({ info, updatePar }: ExcersiseProps) => {
                         <QuantitySelector
                             updateCnt={updateRepCount}
                             value={info.Reps}
-                            minQuantity={0}
+                            minQuantity={1}
                             maxQuantity={maxRepsOrSetsAllowed}
                         />
                     </View>
@@ -57,7 +56,7 @@ const ExcersiseComponent = ({ info, updatePar }: ExcersiseProps) => {
                         <QuantitySelector
                             updateCnt={updateSetCount}
                             value={info.Sets}
-                            minQuantity={0}
+                            minQuantity={1}
                             maxQuantity={maxRepsOrSetsAllowed}
                         />
                     </View>
