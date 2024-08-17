@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { buttonColour } from "../Utility/global_consts";
 
 const popupStyles = StyleSheet.create({
     centeredView: {
@@ -10,7 +11,7 @@ const popupStyles = StyleSheet.create({
     modalView: {
         width: "80%",
         margin: 20,
-        backgroundColor: "white",
+        backgroundColor: "#30363d",
         borderRadius: 20,
         padding: 35,
         alignItems: "center",
@@ -29,15 +30,15 @@ const popupStyles = StyleSheet.create({
         elevation: 2,
     },
     buttonOpen: {
-        backgroundColor: "#F194FF",
+        backgroundColor: buttonColour,
     },
     buttonClose: {
-        backgroundColor: "#2196F3",
+        backgroundColor: buttonColour,
     },
     textStyle: {
-        color: "white",
-        fontWeight: "bold",
-        textAlign: "center",
+    fontSize:15,
+    fontFamily: "PermanentMarker_400Regular",
+    color:'white',
     },
     modalText: {
         marginBottom: 15,

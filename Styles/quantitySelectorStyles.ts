@@ -5,7 +5,7 @@ const quantitySelectorStyle = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         marginLeft: 10,
-        marginRight: 10,
+        marginRight: 0,
         padding: 0,
         width: "40%",
     },

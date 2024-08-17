@@ -1,23 +1,24 @@
 import React from "react";
-import { Pressable, View, Image } from "react-native";
+import { Pressable, View, Image, ImageSourcePropType } from "react-native";
 
 export type PressableImageProp = {
-    img: any;
-    onpress: any;
+  img: ImageSourcePropType;
+  onpress: Function;
+  imageSize: number;
 };
 
-const PressableImage = ({ img, onpress }: PressableImageProp) => {
-    return (
-        <View>
-            <Pressable
-                onPress={onpress}
-                style={({ pressed }) => {
-                    return { opacity: pressed ? 0 : 1 };
-                }}
-            >
-                <Image source={img} />
-            </Pressable>
-        </View>
-    );
+const PressableImage = ({ img, onpress, imageSize }: PressableImageProp) => {
+  return (
+    <View>
+      <Pressable
+        onPress={onpress}
+        style={({ pressed }) => {
+          return { opacity: pressed ? 0 : 1 };
+        }}
+      >
+        <Image source={img} style={{ height: imageSize, width: imageSize }} />
+      </Pressable>
+    </View>
+  );
 };
 export default PressableImage;

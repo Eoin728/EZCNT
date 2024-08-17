@@ -1,8 +1,13 @@
 {
-    "expo": {
-        "name": "EZCNT",
-        "slug": "EZCNT",
-        "version": "1.0.0"
-    },
-    "name": "EZCNT"
+  "expo": {
+    "name": "EZCNT",
+    "slug": "EZCNT",
+    "version": "1.0.0",
+    "extra": {
+      "eas": {
+        "projectId": "5eeab735-4bf6-4a07-856f-77669d0f536e"
+      }
+    }
+  },
+  "name": "EZCNT"
 }

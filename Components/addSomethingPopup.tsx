@@ -1,20 +1,19 @@
 import React from "react";
 import { Alert, Modal, Pressable, Text, View, TextInput } from "react-native";
-import QuantitySelector from "./quantitySelector";
 import popupStyles from "../Styles/popupStyles";
 
 export type AddSomethingPopupProp = {
     onSave: Function;
     setModalVisible: any;
     modalVisible: any;
-    needsCounter: boolean;
+    keyboardNumberOnly:boolean;
 };
 
 const AddSomethingPopup = ({
     onSave,
     setModalVisible,
     modalVisible,
-    needsCounter,
+    keyboardNumberOnly,
 }: AddSomethingPopupProp) => {
     const [text, onChangeText] = React.useState("placeholder");
 
@@ -32,17 +31,14 @@ const AddSomethingPopup = ({
                 <View style={popupStyles.centeredView}>
                     <View style={popupStyles.modalView}>
                         <TextInput
-                            placeholder="Enter name"
+                        inputMode={keyboardNumberOnly? "numeric":"text"}
                             onChangeText={onChangeText}
+                            underlineColorAndroid={'grey'} 
+                            placeholderTextColor={'transparent'}
+                            placeholder="aaaaaaaa"
                         />
 
-                        {needsCounter && (
-                            <QuantitySelector
-                                value={0}
-                                minQuantity={0}
-                                maxQuantity={56}
-                            />
-                        )}
+<View style= {{flexDirection:'row'}}>
                         <Pressable
                             style={[
                                 popupStyles.button,
@@ -64,6 +60,7 @@ const AddSomethingPopup = ({
                         >
                             <Text style={popupStyles.textStyle}>Save</Text>
                         </Pressable>
+</View>
                     </View>
                 </View>
             </Modal>
